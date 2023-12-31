@@ -89,7 +89,6 @@ class LoginAPIView(generics.CreateAPIView):
                 message = {
                     'message': 'You logged in successfully',
                     'data': login_token,
-                    'user_id': user.pk,
                 }
                 log = {
                     'event': 'Logged in',
@@ -112,7 +111,6 @@ class LogoutAPIView(generics.GenericAPIView):
         if auth:
             message = {
                 'message': 'You Logout successfully',
-                'user_id': user.pk,
             }
             log = {
                 'event': 'Logout',
