@@ -1,0 +1,24 @@
+asgiref @ file:///C:/Users/BUILDE~1/AppData/Local/Temp/abs_cchykh5sgr/croots/recipe/asgiref_1661287542702/work
+async-timeout==4.0.3
+backports.zoneinfo @ file:///C:/Users/BUILDE~1/AppData/Local/Temp/abs_29zz4uumbw/croots/recipe/backports.zoneinfo_1661287541232/work
+cffi==1.16.0
+cryptography==41.0.7
+Django @ file:///C:/Users/BUILDE~1/AppData/Local/Temp/abs_eeor5o9jj8/croots/recipe/django_1661292534510/work
+django-debug-toolbar==4.2.0
+django-redis==5.4.0
+djangorestframework==3.14.0
+drf-yasg==1.21.7
+inflection==0.5.1
+jwt==1.3.1
+packaging==23.2
+psycopg2==2.9.9
+pycparser==2.21
+PyJWT==2.8.0
+python-dotenv==1.0.0
+pytz==2023.3.post1
+PyYAML==6.0.1
+redis==5.0.1
+redis-simple-cache==0.0.8
+sqlparse @ file:///C:/b/abs_88361ub_qu/croot/sqlparse_1690904577514/work
+tzdata @ file:///croot/python-tzdata_1690578112552/work
+uritemplate==4.1.1

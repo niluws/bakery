@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  redis:
+    container_name: BakeryRedis
+    image: redis:alpine3.17
+    restart: always
+    ports:
+      - 6379:6379
+    volumes:
+      - redis-data:/data
+
+  postgres:
+    container_name: BakeryPostgres
+    image: postgres:13
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: postgresdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  redis-data:
+  postgres-data:
+
