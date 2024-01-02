@@ -17,7 +17,8 @@ INSTALLED_APPS = [
     "debug_toolbar",
     # ====Apps==== #
     'authentication',
-    'order'
+    # 'order',
+    'bakery'
 ]
 
 MIDDLEWARE = [
@@ -34,10 +35,10 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
-ROOT_URLCONF = "bakery.urls"
+ROOT_URLCONF = "core.urls"
 
 
-WSGI_APPLICATION = "bakery.wsgi.application"
+WSGI_APPLICATION = "core.wsgi.application"
 
 
 # Password validation
