@@ -1,3 +1,6 @@
+from uuid import uuid4
+
+from django.core.validators import MinValueValidator
 from django.db import models
 
 from authentication.models import User
@@ -10,7 +13,7 @@ class PromotionModel(models.Model):
 
 class CategoryModel(models.Model):
     title = models.CharField(max_length=150)
-    parent = models.ForeignKey('self', on_delete=models.CASCADE)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
 
 
 class ProductModel(models.Model):
@@ -20,7 +23,7 @@ class ProductModel(models.Model):
     upload_at = models.DateTimeField(auto_now_add=True)
     last_update = models.DateTimeField(auto_now=True)
     category = models.OneToOneField(CategoryModel, on_delete=models.CASCADE)
-    promotions = models.ManyToManyField(PromotionModel)
+    promotions = models.ManyToManyField(PromotionModel, null=True, blank=True)
 
 
 class OrderModel(models.Model):
@@ -32,12 +35,13 @@ class OrderModel(models.Model):
         (PAYMENT_STATUS_COMPLATE, 'Complete'),
         (PAYMENT_STATUS_FAILED, 'Failed'),
     ]
-    create_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     payment_status = models.CharField(max_length=1, choices=PAYMENT_STATUS_CHOICES, default=PAYMENT_STATUS_PENDING)
+    customer = models.ForeignKey(User, on_delete=models.PROTECT)
 
 
 class OrderItemModel(models.Model):
-    order = models.ForeignKey(OrderModel, on_delete=models.CASCADE)
+    order = models.ForeignKey(OrderModel, on_delete=models.CASCADE, related_name='items')
     product = models.ForeignKey(ProductModel, on_delete=models.CASCADE)
     quantity = models.PositiveSmallIntegerField()
     price = models.PositiveIntegerField()
@@ -50,10 +54,14 @@ class AddressModel(models.Model):
 
 
 class CartModel(models.Model):
+    id = models.UUIDField(default=uuid4, primary_key=True)
     create_at = models.DateTimeField(auto_now_add=True)
 
 
 class CartItemModel(models.Model):
-    cart = models.ForeignKey(CartModel, on_delete=models.CASCADE)
+    cart = models.ForeignKey(CartModel, on_delete=models.CASCADE, related_name='items')
     product = models.ForeignKey(ProductModel, on_delete=models.CASCADE)
-    quantity = models.PositiveSmallIntegerField()
+    quantity = models.PositiveSmallIntegerField(validators=[MinValueValidator(1)])
+
+    class Meta:
+        unique_together = [['cart', 'product']]
