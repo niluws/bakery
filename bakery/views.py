@@ -1,9 +1,10 @@
-from rest_framework import viewsets, parsers, permissions
+from rest_framework import viewsets, parsers, permissions, response
 
 from authentication.models import User
+from utils import JWTManager
 from .models import ProductModel, CategoryModel, CartModel, CartItemModel, OrderModel
 from .serializers import ProductSerializer, CategorySerializer, CartSerializer, CartItemSerializer, \
-    AddCartItemSerializer, UpdateCartItemSerializer, OrderSerializer, CreateOrderSerializer
+    AddCartItemSerializer, UpdateCartItemSerializer, OrderSerializer, CreateOrderSerializer, UpdateOrderSerializer
 
 
 class ProductViewSet(viewsets.ModelViewSet):
@@ -40,15 +41,27 @@ class CartItemViewSet(viewsets.ModelViewSet):
 
 
 class OrderViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [JWTManager.AuthHandler]
+    http_method_names = ['get', 'patch', 'delete', 'head', 'options']
+
+    def get_permissions(self):
+        if self.request.method in ['PATCH', 'DELETE']:
+            return [permissions.IsAdminUser()]
+        return [permissions.IsAuthenticated()]
+
+    def create(self, request, *args, **kwargs):
+        serializer = CreateOrderSerializer(data=request.data, context={'user_id': self.request.user.id})
+        serializer.is_valid(raise_exception=True)
+        order = serializer.save()
+        serializer = OrderSerializer(order)
+        return response.Response(serializer.data)
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
             return CreateOrderSerializer
+        elif self.request.method == 'PATCH':
+            return UpdateOrderSerializer
         return OrderSerializer
-
-    def get_serializer_context(self):
-        return {'user_id': self.request.user.id}
 
     def get_queryset(self):
         user = self.request.user
